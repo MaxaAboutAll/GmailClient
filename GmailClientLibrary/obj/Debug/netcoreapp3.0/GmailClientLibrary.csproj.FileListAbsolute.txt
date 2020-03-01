@@ -1,9 +1,0 @@
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\bin\Debug\netcoreapp3.0\GmailClientLibrary.deps.json
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\bin\Debug\netcoreapp3.0\GmailClientLibrary.dll
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\bin\Debug\netcoreapp3.0\GmailClientLibrary.pdb
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\obj\Debug\netcoreapp3.0\GmailClientLibrary.csprojAssemblyReference.cache
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\obj\Debug\netcoreapp3.0\GmailClientLibrary.AssemblyInfoInputs.cache
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\obj\Debug\netcoreapp3.0\GmailClientLibrary.AssemblyInfo.cs
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\obj\Debug\netcoreapp3.0\GmailClientLibrary.dll
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\obj\Debug\netcoreapp3.0\GmailClientLibrary.pdb
-C:\Users\scryptan\source\repos\Practice c#\GmailClient\GmailClientLibrary\bin\Debug\netcoreapp3.0\credentials.json
