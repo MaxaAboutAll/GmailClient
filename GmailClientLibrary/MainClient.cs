@@ -62,6 +62,11 @@ namespace GmailClientLibrary
             var newMsg = new Message {Raw = Base64Encode(CreateMessage(to, subject, text))};
             service.Users.Messages.Send(newMsg, "me").Execute();
         }
+
+        public void DeleteMessage(string messageId)
+        {
+            service.Users.Messages.Delete("me", messageId).Execute();
+        }
         
         private IList<Message> GetListMessageIds()
         {
