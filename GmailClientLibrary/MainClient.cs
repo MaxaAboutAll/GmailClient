@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
@@ -14,7 +15,7 @@ namespace GmailClientLibrary
 {
     public class MainClient
     {
-        private static string[] Scopes = { GmailService.Scope.GmailReadonly };
+        private static string[] Scopes = { GmailService.Scope.MailGoogleCom };
         private string ApplicationName = "Gmail Client";
         private readonly GmailService service;
         
@@ -34,7 +35,7 @@ namespace GmailClientLibrary
                 Console.WriteLine("Credential file saved to: " + credPath);
             } 
             
-            service = new GmailService(new BaseClientService.Initializer()
+            service = new GmailService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
@@ -46,9 +47,6 @@ namespace GmailClientLibrary
             var messageIds = GetListMessageIds();
             foreach (var e in messageIds)
             {
-                var gettingMessage = service.Users.Messages.Get("me", e.Id);
-                gettingMessage.Format = UsersResource.MessagesResource.GetRequest.FormatEnum.Raw;
-                var myMes = gettingMessage.Execute();
                 var message = service.Users.Messages.Get("me", e.Id).Execute();
                 var from = message.Payload.Headers.First(x => x.Name.Equals("From")).Value;
                 var to = message.Payload.Headers.First(x => x.Name.Equals("To")).Value;
@@ -57,20 +55,35 @@ namespace GmailClientLibrary
                 yield return new GmailMessageDTO{From = from, To = to, Date = date, 
                     Id = message.Id, Message = Base64Decode(messageText), Snippet = message.Snippet};
             }
-        } 
+        }
+
+        public void SendMessage(string to, string subject, string text)
+        {
+            var newMsg = new Message {Raw = Base64Encode(CreateMessage(to, subject, text))};
+            service.Users.Messages.Send(newMsg, "me").Execute();
+        }
         
         private IList<Message> GetListMessageIds()
         {
             var request = service.Users.Messages.List("me");
-             request.LabelIds = new Repeatable<string>(new []{"INBOX"});
+            request.LabelIds = new Repeatable<string>(new []{"INBOX"});
             return request.Execute().Messages;
         }
+
+        private string CreateMessage(string to, string subject, string text)
+        {
+            return $"To:{to}\r\n" +
+                               $"Subject: {subject}\r\n" +
+                               "Content-Type: text/plain; charset=us-ascii\r\n\r\n" +
+                               $"{text}";
+        }
         
-        private string Base64Encode(string plainText) {
-            if(plainText == null)
-                throw new ArgumentException();
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
+        private string Base64Encode(string input) {
+            var inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
+            return Convert.ToBase64String(inputBytes)
+                .Replace('+', '-')
+                .Replace('/', '_')
+                .Replace("=", "");
         }
         
         private string Base64Decode(string base64EncodedData)
@@ -81,7 +94,7 @@ namespace GmailClientLibrary
             string myStr = "";
             foreach (var e in newMas)
                 myStr += e;
-            var base64EncodedBytes = System.Convert.FromBase64String(myStr);
+            var base64EncodedBytes = Convert.FromBase64String(myStr);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
