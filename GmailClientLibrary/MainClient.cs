@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.Text.Json.Serialization;
 using System.Threading;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
@@ -10,13 +11,15 @@ using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using Google.Apis.Util;
 using Google.Apis.Util.Store;
+using Newtonsoft.Json;
 
 namespace GmailClientLibrary
 {
     public class MainClient
     {
         private static string[] Scopes = { GmailService.Scope.MailGoogleCom };
-        private string ApplicationName = "Gmail Client";
+        private const string ApplicationName = "Gmail Client";
+        private const string FileUri = "./messages.json";
         private readonly GmailService service;
         
         public MainClient()
@@ -44,6 +47,7 @@ namespace GmailClientLibrary
 
         public IEnumerable<GmailMessageDTO> GetMyMails()
         {
+            var messagesForSave = new List<GmailMessageDTO>();
             var messageIds = GetListMessageIds();
             foreach (var e in messageIds)
             {
@@ -52,9 +56,15 @@ namespace GmailClientLibrary
                 var to = message.Payload.Headers.First(x => x.Name.Equals("To")).Value;
                 var date = message.Payload.Headers.First(x => x.Name.Equals("Date")).Value;
                 var messageText = message.Payload.Parts?.FirstOrDefault(x => x.MimeType.Equals("text/plain"))?.Body.Data;
-                yield return new GmailMessageDTO{From = from, To = to, Date = date, 
-                    Id = message.Id, Message = Base64Decode(messageText), Snippet = message.Snippet};
+                var completedMessage = new GmailMessageDTO
+                {
+                    From = from, To = to, Date = date,
+                    Id = message.Id, Message = Base64Decode(messageText), Snippet = message.Snippet
+                };
+                messagesForSave.Add(completedMessage);
+                yield return completedMessage;
             }
+            SaveMessages(messagesForSave);
         }
 
         public void SendMessage(string to, string subject, string text)
@@ -67,7 +77,17 @@ namespace GmailClientLibrary
         {
             service.Users.Messages.Delete("me", messageId).Execute();
         }
-        
+
+        public List<GmailMessageDTO> GetCachedMessages()
+        {
+            var jsonMail = File.ReadAllText(FileUri);
+            return JsonConvert.DeserializeObject<List<GmailMessageDTO>>(jsonMail);
+        }
+        private void SaveMessages(List<GmailMessageDTO> mail)
+        {
+            var content = JsonConvert.SerializeObject(mail);
+            File.WriteAllText(FileUri, content);
+        }
         private IList<Message> GetListMessageIds()
         {
             var request = service.Users.Messages.List("me");
