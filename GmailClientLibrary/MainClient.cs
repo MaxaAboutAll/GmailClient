@@ -22,7 +22,8 @@ namespace GmailClientLibrary
         private const string FileUri = "./messages.json";
         private readonly GmailService service;
         private const string CredPath = "./token.json";
-        
+        public bool isAuthorized => Directory.GetFiles(CredPath) != null;
+
         public MainClient()
         {
             UserCredential credential;
