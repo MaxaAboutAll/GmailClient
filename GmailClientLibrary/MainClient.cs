@@ -21,21 +21,20 @@ namespace GmailClientLibrary
         private const string ApplicationName = "Gmail Client";
         private const string FileUri = "./messages.json";
         private readonly GmailService service;
+        private const string CredPath = "./token.json";
         
         public MainClient()
         {
             UserCredential credential;
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
-                string credPath = "token.json";
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     Scopes,
                     "user",
                     CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
+                    new FileDataStore(CredPath, true)).Result;
+                Console.WriteLine("Credential file saved to: " + CredPath);
             } 
             
             service = new GmailService(new BaseClientService.Initializer
@@ -65,6 +64,11 @@ namespace GmailClientLibrary
                 yield return completedMessage;
             }
             SaveMessages(messagesForSave);
+        }
+
+        public void LogOut()
+        {
+            Directory.Delete(CredPath, true);
         }
 
         public void SendMessage(string to, string subject, string text)
