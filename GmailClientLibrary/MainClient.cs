@@ -22,7 +22,7 @@ namespace GmailClientLibrary
         private const string FileUri = "./messages.json";
         private readonly GmailService service;
         private const string CredPath = "./token.json";
-        public bool isAuthorized => Directory.GetFiles(CredPath) != null;
+        public static bool isAuthorized => Directory.Exists(CredPath);
 
         public MainClient()
         {
@@ -45,7 +45,7 @@ namespace GmailClientLibrary
             });
         }
 
-        public IEnumerable<GmailMessageDTO> GetMyMails()
+        public IEnumerable<GmailMessageDTO> GetMyMails(bool isHtml)
         {
             var messagesForSave = new List<GmailMessageDTO>();
             var messageIds = GetListMessageIds();
@@ -56,13 +56,18 @@ namespace GmailClientLibrary
                 var to = message.Payload.Headers.First(x => x.Name.Equals("To")).Value;
                 var date = message.Payload.Headers.First(x => x.Name.Equals("Date")).Value;
                 var messageText = message.Payload.Parts?.FirstOrDefault(x => x.MimeType.Equals("text/plain"))?.Body.Data;
+                if(isHtml)
+                    messageText = message.Payload.Parts?.FirstOrDefault(x => x.MimeType.Equals("text/html"))?.Body.Data;
                 var completedMessage = new GmailMessageDTO
                 {
                     From = from, To = to, Date = date,
                     Id = message.Id, Message = Base64Decode(messageText), Snippet = message.Snippet
                 };
-                messagesForSave.Add(completedMessage);
-                yield return completedMessage;
+                if (completedMessage.Message.Length > 0)
+                {
+                    messagesForSave.Add(completedMessage);
+                    yield return completedMessage;
+                }
             }
             SaveMessages(messagesForSave);
         }

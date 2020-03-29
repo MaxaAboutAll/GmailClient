@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GmailClientLibrary", "GmailClientLibrary\GmailClientLibrary.csproj", "{9A063A56-91A2-436C-AD1D-B38D71BA7531}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleForTests", "ConsoleForTests\ConsoleForTests.csproj", "{A392EFAE-6E25-4369-B114-AF1E834FD130}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleForTests", "ConsoleForTests\ConsoleForTests.csproj", "{6B30D806-63F8-4E24-9252-190C6CD3F6EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +14,9 @@ Global
 		{9A063A56-91A2-436C-AD1D-B38D71BA7531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A063A56-91A2-436C-AD1D-B38D71BA7531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A063A56-91A2-436C-AD1D-B38D71BA7531}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A392EFAE-6E25-4369-B114-AF1E834FD130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A392EFAE-6E25-4369-B114-AF1E834FD130}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A392EFAE-6E25-4369-B114-AF1E834FD130}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A392EFAE-6E25-4369-B114-AF1E834FD130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B30D806-63F8-4E24-9252-190C6CD3F6EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B30D806-63F8-4E24-9252-190C6CD3F6EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B30D806-63F8-4E24-9252-190C6CD3F6EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B30D806-63F8-4E24-9252-190C6CD3F6EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
